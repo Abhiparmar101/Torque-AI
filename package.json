@@ -1,0 +1,20 @@
+{
+  "name": "torque-ai",
+  "version": "1.0.0",
+  "description": ".... STEPS: 0. goto directory ( Torque-AI )",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/torquehq-io/Torque-AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/torquehq-io/Torque-AI/issues"
+  },
+  "homepage": "https://github.com/torquehq-io/Torque-AI#readme"
+}

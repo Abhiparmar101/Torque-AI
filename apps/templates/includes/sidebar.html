@@ -1,0 +1,148 @@
+
+  
+  <style>
+
+    .sidebar{
+      margin:10px;
+    }
+  </style>
+
+  
+  <div class="sidebar sidebar-dark sidebar-fixed sotoo" style="border-radius:2.8125rem;" id="sidebar">
+      <div class="sidebar-brand d-none d-md-flex" style=" color:white; margin-top: 20px;">
+        <!-- <svg class="sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
+          <use xlink:href="/static/assets/brand/coreui.svg#full"></use>
+        </svg> -->
+        <img src="{{ config.ASSETS_ROOT }}/img/torque.PNG" style="width:20%; height:30%;" class="navbar-brand-img h-100" alt="main_logo" href="#">
+        <span class="ms-4 font-weight-bold" style=" color:white " >TORQUE AI</span>
+        <svg class="sidebar-brand-narrow" width="46" height="46" alt="CoreUI Logo">
+          <use xlink:href="/static/assets/brand/coreui.svg#signet"></use>
+        </svg>
+      </div>
+      <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="" style="background-color:linear-gradient(180deg,#3371d9 0%,#66b3ff 100%); color:white; margin-top: 10px; ">
+        <li class="nav-item"><a class="nav-link" href="index.html">
+            <!-- <svg class="nav-icon"> 
+              <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use> 
+           <use>
+             
+          </use>
+          <span>
+          </svg>
+         -->
+          <span>
+          <i style="width:64px; padding-left: 10px; display: flex; align-items: flex-start;" class="fa-solid fa-chart-column"></i></span> 
+            
+            Dashboard<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li>
+
+            <!-- <li class="nav-item"><a class="nav-link" href="autoannotation.html">
+              <svg class="nav-icon">
+                <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-speedometer"></use>
+              </svg> Auto<span class="badge badge-sm bg-info ms-auto">NEW</span></a></li> -->
+
+          
+  
+
+        <li class="nav-title" style=" display: flex; align-items: flex-start;">Torque Auto-AI</li>
+        <li class="nav-item" ><a class="nav-link" href="autoLabel.html"  id="auto-annotation-tool">
+            <svg class="nav-icon">
+              <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-text-shapes" ></use>
+            </svg >Create Custom AI Model</a></li>
+            
+
+            
+        <li class="nav-item"><a class="nav-link" href="/model_display"  id="model-display">
+          <svg class="nav-icon">
+            <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-3d"></use>
+          </svg>Models</a></li>
+        <li class="nav-item"><a class="nav-link" href="/load_model"  id="model-execution">
+          <svg class="nav-icon">
+            <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-layers"></use>
+          </svg>Load Model</a></li>
+
+          <!-- <li class="nav-item"><a class="nav-link" href="/crowd_counting.html"  id="model-execution">
+            <svg class="nav-icon">
+              <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-contact"></use>
+            </svg>Crowd Counting</a></li> -->
+
+            
+        
+              <!-- <li class="nav-item"><a class="nav-link" href="detection.html"  id="model-execution">
+            <svg class="nav-icon">
+              <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-center-focus"></use>
+            </svg>Model Execution</a></li> -->
+
+
+
+            <li class="nav-item"><a class="nav-link" href="/segmentation"  id="model-execution">
+              <svg class="nav-icon">
+                <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-center-focus"></use>
+              </svg>Object segmentation</a></li>
+        
+        <li class="nav-title" style=" display: flex; align-items: flex-start;">Pre-built AI Engines</li>
+        <!-- <li class="nav-group"><a class="nav-link nav-group-toggle" href="#" id="face-recognition">
+            <svg class="nav-icon">
+              <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-puzzle" ></use>
+            </svg> Facial_recognition</a>
+          <ul class="nav-group-items">
+            <li class="nav-item"><a class="nav-link" href="/candidate_addon.html" ><span class="nav-icon"></span>Candidate Addon</a></li>
+            <li class="nav-item"><a class="nav-link" href="/face_recognition.html" ><span class="nav-icon"></span> Face recognition</a></li>
+            
+          </ul>
+        </li> -->
+        <!-- <li class="nav-group"><a class="nav-link nav-group-toggle" href="#">
+            <svg class="nav-icon">
+              <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-cursor"></use>
+            </svg> Buttons</a> -->
+          <!-- <ul class="nav-group-items">
+            <li class="nav-item"><a class="nav-link" href="/buttons-all.html"><span class="nav-icon"></span> Buttons</a></li>
+            <li class="nav-item"><a class="nav-link" href="/buttons-group.html"><span class="nav-icon"></span> Buttons Group</a></li>
+            <li class="nav-item"><a class="nav-link" href="/buttons-dropdowns.html"><span class="nav-icon"></span> Dropdowns</a></li>
+          </ul>
+        </li> -->
+        <!-- <li class="nav-item"><a class="nav-link" href="person_counter.html"  id="person-counter">
+            <svg class="nav-icon">
+              <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-chart-pie"></use>
+            </svg>Person Counter</a></li> -->
+
+            <li class="nav-item"><a class="nav-link" href="/crowd_counting.html"  id="model-execution">
+              <svg class="nav-icon">
+                <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-people"></use>
+              </svg>Crowd Counting</a></li>
+
+              <li class="nav-item"><a class="nav-link" href="/crowd_counting1.html"  id="model-execution">
+                <svg class="nav-icon">
+                  <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-contact"></use>
+                </svg>Zone Counting</a></li>
+
+        <li class="nav-item"><a class="nav-link" href="firedetection.html"  id="fire-detection">
+              <svg class="nav-icon">
+                <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-fire"></use>
+              </svg>Fire Detection</a></li>
+              
+        <li class="nav-item"><a class="nav-link" href="driverbehaviour.html"  id="person-counter">
+          <svg class="nav-icon">
+            <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-garage"></use>
+          </svg>Driver Monitoring System</a></li>      
+
+        <!------------user selected  object detction -->
+        <!-- <li class="nav-item"><a class="nav-link" href="/try_4multi"  id="fire-detection">
+          <svg class="nav-icon">
+            <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-chart-pie"></use>
+          </svg>Multiple object detction</a></li> -->
+
+
+        <li class="nav-title" style=" display: flex; align-items: flex-start;" id="logout">LOGOUT</li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('authentication_blueprint.logout') }}">
+            <svg class="nav-icon">
+              <use xlink:href="/static/assets/vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>
+            </svg>Logout</a></li>
+
+
+        
+        
+        
+      </ul>
+      <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
+    </div>
+ 
+

@@ -1,0 +1,210 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Typography {% endblock %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<html>  
+<head>  
+    <meta name="apple-mobile-web-app-capable" content="yes">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+		<title>Test</title>
+
+		<script src="static/assets/js/annotation/less.js"></script>
+
+		<script src="static/assets/js/annotation/jquery-3.5.1.min.js"></script>
+    <script>
+			  src="https://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"</script>
+    <title>upload the file : GFG</title>  
+</head> 
+<style>
+  html {
+  text-align: center;
+  background-color: #282c34;
+  color: white;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+
+
+.pre_img{
+  height: 600px;
+  width: 600px;
+  /* background-color: white; */
+}
+
+input[type=file]{
+  background-color: #ffffff;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  /* box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); */
+  margin-right: 5px;
+  /* display: none; */
+
+}
+
+#pre{
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: #3371d9;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  margin: 10px 40px;
+}
+
+p{
+  margin: 50px;
+  font-size: 72px;
+}
+
+.hehe {
+				margin-left: 0px;
+				/* margin-bottom: 25px; */
+				margin-top: 10px;
+				background-color: aliceblue;
+				color: #66b3ff;
+				border-color: #66b3ff;
+				border-radius: 10px;
+			}
+.hehe:hover {
+				background-color: rgba(102, 179, 255, 0.3);
+				color: #66b3ff;
+				border-color: #66b3ff;
+				
+			}
+
+      .hehe1 {
+				margin-left: 0px;
+				/* margin-bottom: 25px; */
+				margin-top: 10px;
+				background: -webkit-linear-gradient(180deg,#3371d9 0%,#66b3ff );
+				color: #ffffff;
+				border-color: #66b3ff;
+				border-radius: 10px;
+				
+			}
+
+			.hehe1:hover {
+				color: #fff;
+				border-color: #66b3ff;
+				background: -webkit-linear-gradient(180deg,#66b3ff 0%,#3371d9 );				
+			}
+
+      .camerainput{
+        width: 100px;
+				/* margin: 8px; */
+				padding: 5px;
+				border:none !important;
+        border-color: #66b3ff;
+				background-color: rgba(102, 179, 255, 0.19);
+				margin:5px 0 5px 0;
+				border-radius: 10px;
+      }
+
+      input::placeholder {
+				opacity: 0.5;
+			}
+
+      .cameraPage{
+        display: flex;
+      }
+      
+     
+
+</style> 
+<body>
+  <table class="table "> <!-- table-hover -->
+    <thead>
+        <tr>
+           
+            <th scope="col">Link Sources</th>
+            <th scope="col">camera_name</th>
+            
+          
+            
+        </tr>
+       
+    </thead>
+    <tbody>
+        
+        {% for row in User_camera_sources %}
+        
+           
+               
+               
+                <tr><td>{{ row.source }}</td>
+                  <td>{{ row.name_source }}</td>
+                  <td><a href="/delete_src/{{ row.serial_no }}" onclick="return confirm('Are Sure Want To Deleted ?')" class="btn btn-danger btn-delete btn-sm ">Delete</a></td>  
+                </tr>
+        {%endfor%}
+              
+   <form style="display: flex;" action = "/camera_source_textfile" method = "post" enctype="multipart/form-data">  
+    <div style="display: flex; margin: auto;">
+
+      <input style="color:#3371d9" class="garba" type="file" name="file" />  
+      <!-- <input type = "submit" value="Upload" id="data">   -->
+      <button style="" class="btn btn-outline-primary hehe" type="submit" id="data">Upload</button>
+    </div>
+    </form>
+    <br/>
+    <h6>----OR----</h6>
+    <br/>
+    <form id="urlForm" action = "/insert_src" method = "post">
+
+      <div class="cameraPage" style=" margin: auto;">
+      <!-- <label>RTMP URL:</label> -->
+      <input class="camerainput" id="rtmpUrl" style="width: 100%; margin-left:10px;" placeholder="Enter RTMP URL here" type="text" name="rtmpUrl" value="" />
+      <!-- </div>
+
+      <div style="display: flex; margin: auto; margin-top: 5px;"> -->
+      <!-- <label>CAMERA NAME:</label> -->
+      <input class="camerainput" id="cam_name" style="width: 50%; margin-left:10px;" type="text" placeholder="Enter Camera Name here" name="camera_name" value="" />
+      </div>
+      <button style="margin:auto; margin-top:8px;" class="btn btn-outline-primary hehe1" id="btnPlay">submit</button>
+      <br/>
+     
+     
+  </form>
+   
+
+</script>
+
+</html>
+
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}
