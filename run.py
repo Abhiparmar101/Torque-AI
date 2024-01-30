@@ -1923,7 +1923,7 @@ import cv2
 import time
 import torch
 import subprocess as sp
-import ffmpegfeed.feeds as fct 
+
 
 @app.route('/multi_model_excution')
 def multi_model_excution():
