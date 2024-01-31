@@ -1491,6 +1491,8 @@ def test():
 
 ############################################################################
 ##################  model display #################################
+
+ALLOWED_EXTENSIONS = {'pt', 'onnx'}
 @app.route('/model_display')
 def model_display():
  
@@ -1544,7 +1546,35 @@ def rename_modelname(id):
         print("model name Updated Successfully")
     return redirect(url_for('model_display'))
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+@app.route('/upload_model', methods=['GET', 'POST'])
+def upload_model():
+    current_loggin_user = current_user.username
+    if request.method == 'POST':
+        # Check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filename_without_extension, _ = os.path.splitext(filename)
+            file.save(os.path.join(str(os.getcwd()+"/Users_slab/"+current_loggin_user+"/Models/"), filename_without_extension +".pt"))
+            
+            # Add database entry logic here
+            new_model_record = User_Models_record(model_name=filename_without_extension,username=current_user.username, user_id=current_user.id, generated_date=datetime.datetime.now())
+            db.session.add(new_model_record)
+            db.session.commit()
 
+            return redirect(url_for('model_display'))
+    return render_template('upload.html')
 ##############################################################################
 ################################### model storing at database ###################
 class User_Models_record(db.Model):
@@ -1582,8 +1612,7 @@ class User_camera_sources_record(db.Model):
         self.source= source
         self.name_source= name_source
 ######################################### uplode the camera source text file from user ###############
-from distutils.log import debug
-from fileinput import filename
+
 import csv  
 
 
