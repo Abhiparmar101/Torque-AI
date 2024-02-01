@@ -1,0 +1,131 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<style>
+    .image-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* adjust '4' to however many columns you want */
+        grid-gap: 10px; /* adjust the gap between images */
+        max-height: 90vh; /* 90% of the viewport height */
+        overflow-y: auto; /* enable vertical scrollbar */
+        padding: 10px; /* adjust padding around the grid */
+    }
+    .image-item {
+        width: 100%;
+        border: 1px solid #ddd; /* optional border for images */
+        border-radius: 4px; /* optional rounded corners for images */
+        overflow: hidden; /* ensures the border radius clips the content */
+    }
+    .image-item img {
+        width: 100%;
+        height: auto; /* maintain aspect ratio */
+        display: block; /* remove bottom space */
+    }
+    #datePicker {
+        z-index: 1000; /* Use a value that is higher than the sidebar's z-index */
+         position: relative;
+         left: 10px;
+}
+/* Style the modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 10000; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Style the modal content (image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px; /* You can set a max width */
+}
+
+/* Style the close button */
+.close {
+  position: absolute;
+  top: 25px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Add animation (zoom in the modal) */
+.modal-content, #caption {  
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)} 
+  to {transform:scale(1)}
+}
+
+    </style>
+<!-- Date Picker Form -->
+<form action="/show_images" method="get">
+    <input type="date" name="date" id="datePicker" value="{{ selected_date }}">
+    <input type="submit" value="Show Images">
+</form>
+
+<!-- Images Container -->
+<div class="image-container">
+    {% for image_url in images %}
+        <div class="image-item">
+            <img src="{{ image_url }}" alt="Captured Image">
+        </div>
+    {% endfor %}
+</div>
+<div id="imageModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div id="caption"></div>
+  </div>
+  <script>
+    // Get the modal
+    var modal = document.getElementById('imageModal');
+    
+    // Get the image and insert it inside the modal
+    var modalImg = document.getElementById("modalImage");
+    var captionText = document.getElementById("caption");
+    
+    // Use event delegation to handle all click events on image container
+    document.querySelector('.image-container').addEventListener('click', function(event) {
+      if (event.target.tagName === 'IMG') {
+        modal.style.display = "block";
+        modalImg.src = event.target.src;
+        captionText.innerHTML = event.target.alt; // Use this if you want to show image alt as caption
+      }
+    });
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() { 
+      modal.style.display = "none";
+    }
+    </script>
+<!-- Possibly include a message for when no images are found -->
+{% if images|length == 0 %}
+    <p>No images found for this date.</p>
+{% endif %}
+
+{% endblock %}
