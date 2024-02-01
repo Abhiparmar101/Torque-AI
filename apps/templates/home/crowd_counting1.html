@@ -197,30 +197,7 @@
 <script src="static/assets/js/annotation/less.js"></script>
 
         <script src="static/assets/js/annotation/jquery-3.5.1.min.js"></script>
-
-
-
-
-        <!-- <div class="pc-container">
-            <div class="page-header">
-                <div class="page-block">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <div class="page-header-title">
-                                <h5 class="m-b-10">STRATASPACE-AI</h5>
-                            </div>
-                            <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        
-                                <li class="breadcrumb-item">Pre-Built Models</li>
-                                <li class="breadcrumb-item"><a href="/person_counter.html">PERSON COUNTER</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="pcoded-content"> -->
-                <!-- [ Main Content ] start -->
+>
         
                 <div class="row">
                     <!-- [ Typography ] start -->
@@ -270,6 +247,7 @@
                 <div class="row" style="height:50%; width: 50%; margin-left: 20%;">
                     <canvas id="liveChart"></canvas>
                 </div>
+                <div><button onclick="window.location.href='/show_images'">view Images</button></div>
                 <!-- [ Main Content ] end -->
           
                 {% for message in get_flashed_messages() %}
@@ -278,10 +256,6 @@
                    
             </div>
         </div> 
-        <!-- <div style="width:50%; height: 1000%;">
-            <canvas id="graph"></canvas>
-        </div> -->
-       
         
         <script>
             
@@ -323,60 +297,6 @@
 </script>
 
 
-
-<!-- <script>
-    // Function to fetch live data from Flask route
-    async function fetchData() {
-        const response = await fetch('/people_count_data?rand=' + Date.now());
-        const data = await response.json();
-        return data;
-    }
-
-    // Function to update the line chart with live data
-    async function updateChart() {
-        const data = await fetchData();
-
-        // Get the chart canvas element
-        const chartCanvas = document.getElementById('liveChart').getContext('2d');
-
-        // Create the line chart
-        const chart = new Chart(chartCanvas, {
-            type: 'line',
-            data: {
-                labels: data.timestamp,
-                datasets: [{
-                    label: 'People Count',
-                    data: data.count,
-                    borderColor: 'rgb(0, 0, 255)',
-                    borderWidth: 1,
-                    fill: false
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Timestamp'
-                        }
-                    },
-                    y: {
-                        display: true,
-                        title: {
-                            display: true,
-                            text: 'Count'
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    // Update the chart every second
-    setInterval(updateChart, 1000);
-</script> -->
 
 
 <script>
