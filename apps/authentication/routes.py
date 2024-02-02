@@ -17,6 +17,7 @@ from apps.authentication.models import Users
 
 from apps.authentication.util import verify_pass
 import os
+import csv
 
 @blueprint.route('/')
 def route_default():
@@ -68,7 +69,24 @@ def register():
         
         os.mkdir(user_folder)
         os.makedirs(user_folder+"/Models")
-        os.makedirs(user_folder+"/crowd_counting_history/images")
+        os.makedirs(user_folder+"/history/booth_img")
+        os.makedirs(user_folder+"/history/crowd_img")
+        os.makedirs(user_folder+"/history/drowsyness_img")
+
+
+        # Create CSV files
+        people_count_history_file = os.path.join(user_folder, "history", "people_count_history.csv")
+        booth_file = os.path.join(user_folder, "history", "booth.csv")
+
+        # Create people_count_history.csv and write the header
+        with open(people_count_history_file, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Timestamp', 'Count',"Imagepath"])
+
+        # Create booth.csv and write the header
+        with open(booth_file, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Timestamp', 'Count',"Imagepath"])
         if user:
             return render_template('accounts/register.html',
                                    msg='Username already registered',

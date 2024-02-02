@@ -2301,7 +2301,7 @@ class VideoPeopleDetection():
         self.current_loggin_user=current_user.username
 
         self.last_capture_time = datetime.datetime.now()
-        self.csv_file = os.getcwd()+"/Users_slab/"+self.current_loggin_user+"/crowd_counting_history/people_count_history.csv"  # CSV file to store the history
+        self.csv_file = os.getcwd()+"/Users_slab/"+self.current_loggin_user+"/history/people_count_history.csv"  # CSV file to store the history
         self.initialize_csv_file()
         self.last_capture_time = datetime.datetime.now()  # Initialize the last capture time
 
@@ -2401,7 +2401,7 @@ class VideoPeopleDetection():
             image_name = current_time.strftime("%H%M%S") + ".jpg"
               # Create a subfolder with today's date
             today_folder = current_time.strftime("%Y-%m-%d")
-            image_folder_path = os.path.join(os.getcwd(), "Users_slab", self.current_loggin_user, "crowd_counting_history", "crowd_img", today_folder)
+            image_folder_path = os.path.join(os.getcwd(), "Users_slab", self.current_loggin_user, "history", "crowd_img", today_folder)
 
             # Create today's folder if it does not exist
             if not os.path.exists(image_folder_path):
@@ -2441,7 +2441,7 @@ def crowd_counting():
 def get_data():
     current_loggin_user=current_user.username
     # Read the CSV file into a pandas DataFrame
-    df = pd.read_csv(os.getcwd()+"/Users_slab/"+current_loggin_user+"/crowd_counting_history/people_count_history.csv")
+    df = pd.read_csv(os.getcwd()+"/Users_slab/"+current_loggin_user+"/history/people_count_history.csv")
 
     # Update the following lines with the correct column names
     timestamp_column = 'Timestamp'
@@ -2487,7 +2487,7 @@ class VideoPeopleDetection1():
         self.current_loggin_user=current_user.username
         self.roi_model=torch.hub.load('yolov5', 'custom', path="yolov5s.pt", source='local',_verbose=False, force_reload=True)
         self.last_capture_time = datetime.datetime.now()
-        self.csv_file = os.getcwd()+"/Users_slab/"+self.current_loggin_user+"/crowd_counting_history/booth.csv"  # CSV file to store the history
+        self.csv_file = os.getcwd()+"/Users_slab/"+self.current_loggin_user+"/history/booth.csv"  # CSV file to store the history
         self.initialize_csv_file()
         self.last_capture_time = datetime.datetime.now()  # Initialize the last capture time
         # self.video_name = 'For_Validation6.mp4'
@@ -2572,7 +2572,7 @@ class VideoPeopleDetection1():
             
             # Create a subfolder with today's date
             today_folder = current_time.strftime("%Y-%m-%d")
-            image_folder_path = os.path.join(os.getcwd(), "Users_slab", self.current_loggin_user, "crowd_counting_history", "booth_img", today_folder)
+            image_folder_path = os.path.join(os.getcwd(), "Users_slab", self.current_loggin_user, "history", "booth_img", today_folder)
 
             # Create today's folder if it does not exist
             if not os.path.exists(image_folder_path):
@@ -2650,7 +2650,7 @@ def crowd_counting1():
 @app.route('/images/<username>/<date>/<filename>')
 def serve_image(username, date, filename):
     base_dir = str(os.getcwd())
-    image_folder = os.path.join(base_dir, "Users_slab", username, "crowd_counting_history", "booth_img", date)
+    image_folder = os.path.join(base_dir, "Users_slab", username, "history", "booth_img", date)
     return send_from_directory(image_folder, filename)
 
 # @app.route('/show_images', defaults={'date': None})
@@ -2659,7 +2659,7 @@ def show_images():
     selected_date = request.args.get('date', default=datetime.datetime.now().strftime("%Y-%m-%d"), type=str)
     current_loggin_user = current_user.username
     base_dir = str(os.getcwd())
-    image_folder = os.path.join(base_dir, "Users_slab", current_loggin_user, "crowd_counting_history", "booth_img", selected_date)
+    image_folder = os.path.join(base_dir, "Users_slab", current_loggin_user, "history", "booth_img", selected_date)
     
     if os.path.exists(image_folder):
         image_list = os.listdir(image_folder)
@@ -2679,8 +2679,8 @@ import time
 def get_data1():
     current_loggin_user=current_user.username
     # Read the CSV file into a pandas DataFrame
-    df = pd.read_csv(os.getcwd()+"/Users_slab/"+current_loggin_user+"/crowd_counting_history/booth.csv")
-    csv_file = os.path.join(os.getcwd(), 'Users_slab', current_loggin_user, 'crowd_counting_history', 'booth.csv')
+    df = pd.read_csv(os.getcwd()+"/Users_slab/"+current_loggin_user+"/history/booth.csv")
+    csv_file = os.path.join(os.getcwd(), 'Users_slab', current_loggin_user, 'history', 'booth.csv')
 
 
     
@@ -2772,7 +2772,7 @@ def infer_one_frame(image, model, yolo_model, facial_tracker,current_loggin_user
     if capture_image:
         # Define the path for saving the image
         today_folder = datetime.datetime.now().strftime("%Y-%m-%d")
-        image_folder_path = os.path.join(os.getcwd(), "Users_slab", current_loggin_user, "crowd_counting_history", "drowsyness_img", today_folder)
+        image_folder_path = os.path.join(os.getcwd(), "Users_slab", current_loggin_user, "history", "drowsyness_img", today_folder)
 
         # Create today's folder if it does not exist
         if not os.path.exists(image_folder_path):
@@ -2830,6 +2830,7 @@ def driverbehaviour():
     return render_template('home/driverbehaviour.html', User_camera_sources=User_camera_sources_record.query.filter_by(username=current_user.username))
 ####################################################################################################################################
 
+####################################################################################################
 if __name__ == "__main__":
    
     app.run(host="0.0.0.0")
