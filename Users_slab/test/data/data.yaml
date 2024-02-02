@@ -1,6 +1,0 @@
-train: /home/torqueai/github/Torque-AI/Users_slab/test//data/images/train
-val: /home/torqueai/github/Torque-AI/Users_slab/test//data/images/valid
-
-nc: 1
-names: ['']
-SAVE_VALID_PREDICTION_IMAGES: True

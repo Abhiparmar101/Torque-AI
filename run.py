@@ -2116,9 +2116,6 @@ from flask import Flask, render_template, request, Response, redirect, url_for, 
 
 from segmentation.src.VideoStream import *
 
-
-
-
 model_config = {
     "model_path": './segmentation/models/yolov8n-seg.onnx', # model path
     "classes_path" : 'segmentation/models/coco_label.txt', # classes path
@@ -2127,10 +2124,6 @@ model_config = {
     "box_aspect_ratio" : None,
     "box_stretch" : None,
 }
-
-
-
-
 
 @app.route('/segmentation',methods=["GET","POST"])
 def seg():
@@ -2647,28 +2640,6 @@ def video_feed_for_crowd_counting1():
 def crowd_counting1():
   
     return render_template('home/crowd_counting1.html', User_camera_sources=User_camera_sources_record.query.filter_by(username=current_user.username))
-@app.route('/images/<username>/<date>/<filename>')
-def serve_image(username, date, filename):
-    base_dir = str(os.getcwd())
-    image_folder = os.path.join(base_dir, "Users_slab", username, "history", "booth_img", date)
-    return send_from_directory(image_folder, filename)
-
-# @app.route('/show_images', defaults={'date': None})
-@app.route('/show_images')
-def show_images():
-    selected_date = request.args.get('date', default=datetime.datetime.now().strftime("%Y-%m-%d"), type=str)
-    current_loggin_user = current_user.username
-    base_dir = str(os.getcwd())
-    image_folder = os.path.join(base_dir, "Users_slab", current_loggin_user, "history", "booth_img", selected_date)
-    
-    if os.path.exists(image_folder):
-        image_list = os.listdir(image_folder)
-        image_urls = ['/images/{}/{}/{}'.format(current_loggin_user, selected_date, file) for file in image_list]
-    else:
-        image_urls = []
-        flash('No images found for this date.')
-
-    return render_template('home/show_images.html', images=image_urls, selected_date=selected_date)
 
 
 import pandas as pd
@@ -2766,9 +2737,6 @@ def infer_one_frame(image, model, yolo_model, facial_tracker,current_loggin_user
     cv2.putText(image, f'Driver mouth: {yawn_status}', (30, 80), 0, 1, conf.CT_COLOR, 2, lineType=cv2.LINE_AA)
     cv2.putText(image, f'Driver action: {action}', (30, 120), 0, 1, conf.WARN_COLOR, 2, lineType=cv2.LINE_AA)
 
-        # cv2.putText(image, f'Driver Present: {action}', (30, 160), 0, 1,
-        #             conf.WARN_COLOR, 2, lineType=cv2.LINE_AA)
-        # If capture_image is True, save the frame
     if capture_image:
         # Define the path for saving the image
         today_folder = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -2829,6 +2797,36 @@ def driverbehaviour():
   
     return render_template('home/driverbehaviour.html', User_camera_sources=User_camera_sources_record.query.filter_by(username=current_user.username))
 ####################################################################################################################################
+###################################### images history display##############################
+@app.route('/images/<username>/<folder>/<date>/<filename>')
+def serve_image(username, folder, date, filename):
+    base_dir = str(os.getcwd())
+    allowed_folders = {'booth_img', 'crowd_img', 'drowsyness_img'}  # Allowed folders for security reasons
+    if folder not in allowed_folders:
+        return "Folder not found", 404
+    image_folder = os.path.join(base_dir, "Users_slab", username, "history", folder, date)
+    return send_from_directory(image_folder, filename)
+
+
+@app.route('/show_images/<folder>')
+def show_images(folder):
+    selected_date = request.args.get('date', default=datetime.datetime.now().strftime("%Y-%m-%d"), type=str)
+    current_loggin_user = current_user.username
+    base_dir = str(os.getcwd())
+    allowed_folders = {'booth_img', 'crowd_img', 'drowsyness_img'}
+    if folder not in allowed_folders:
+        return "Folder not found", 404
+    image_folder = os.path.join(base_dir, "Users_slab", current_loggin_user, "history", folder, selected_date)
+    
+    if os.path.exists(image_folder):
+        image_list = os.listdir(image_folder)
+        image_urls = ['/images/{}/{}/{}/{}'.format(current_loggin_user, folder, selected_date, file) for file in image_list]
+    else:
+        image_urls = []
+        flash('No images found for this date.')
+
+    return render_template('home/show_images.html', images=image_urls, selected_date=selected_date, folder=folder)
+
 
 ####################################################################################################
 if __name__ == "__main__":

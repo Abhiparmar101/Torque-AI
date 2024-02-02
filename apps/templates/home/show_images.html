@@ -80,9 +80,9 @@
 
     </style>
 <!-- Date Picker Form -->
-<form action="/show_images" method="get">
-    <input type="date" name="date" id="datePicker" value="{{ selected_date }}">
-    <input type="submit" value="Show Images">
+<form action="{{ url_for('show_images', folder=folder) }}" method="get">
+  <input type="date" name="date" id="datePicker" value="{{ selected_date }}">
+  <input type="submit" value="Show Images">
 </form>
 
 <!-- Images Container -->
