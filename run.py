@@ -1942,171 +1942,6 @@ def stream_view_4multi():
     return render_template("home/try_multi.html",data=object_list,len = len(object_list),User_camera_sources=User_camera_sources_record.query.filter_by(username=current_user.username))
 
 
-
-
-
-#####################################################################################################################################################
-                        # Multi feed 
-#####################################################################################################################################################
-
-import cv2
-import time
-import torch
-import subprocess as sp
-
-
-@app.route('/multi_model_excution')
-def multi_model_excution():
- 
-    
-    return render_template('home/detection.html',User_Models_record=User_Models_record.query.filter_by(username=current_user.username))
-
-
-
-
-class multifeed1():
-    def __init__(self, url):
-    
-        # self.video = cv2.VideoCapture('rtmp://media1.ambicam.com:1938/dvr7/fd9b67cc-6c2e-46c6-99c4-0e13ac403e32')
-        current_loggin_user=current_user.username
-        fetch_url =  User_camera_sources.query.filter_by(username=current_loggin_user).first()
-        print(fetch_url.link1)
-        self.video = cv2.VideoCapture(fetch_url.link1)
-        frame_width = int(self.video.get(3))
-        frame_height = int(self.video.get(4))
-        rtmp_url = "rtmp://media5.ambicam.com:1938/live/feed22222"
-        ffmpeg = "ffmpeg -f rawvideo -pix_fmt bgr24 -s {}x{} -r 15 -i - -pix_fmt yuv420p -vcodec libx264 -preset ultrafast -tune zerolatency -http_persistent 0 -ar 8K -f flv {}".format(
-            frame_width, frame_height, rtmp_url)
-        self.url = url
-        self.error_count = 0
-        self.process = sp.Popen(ffmpeg.split(), stdin=sp.PIPE)
-        self.model = torch.hub.load('yolov5', 'custom', path='/home/torquehqio/torquehq-io/main/Torque-AI/Users_slab/test/Models/coffeBottle.pt', source='local',_verbose=False, force_reload=True)
-
-       
-
-    def __del__(self):
-        self.video.release()
-    
-    def get_frame(self):
-       
-
-        
-        # Set Model Settings Dynamic
-        self.model.eval()
-        self.model.conf = 0.6  # confidence threshold (0-1)
-        self.model.iou = 0.45  # NMS IoU threshold (0-1) 
-      
-        success, frame = self.video.read()
-        if success == True:
-            new_img = fct.draw_anchor_box(
-                frame, fct.detection(frame, self.model))
-
-            # ret,buffer=cv2.imencode('.jpg',frame)
-            # frame=buffer.tobytes()
-            
-            # #print(type(frame))
-
-            # img = Image.open(io.BytesIO(frame))
-            # results = self.model(img, size=640)
-        
-            # results.print()  # print results to screen
-            
-            
-            # #convert remove single-dimensional entries from the shape of an array
-            # img = np.squeeze(results.render()) #RGB
-            # # read image as BGR
-            # img_BGR = cv2.cvtColor(img, cv2.COLOR_RGB2BGR) #BGR
-            # frame = cv2.imencode('.jpg', img_BGR)[1].tobytes()
-            self.process.stdin.write(frame.tobytes())
-            return frame
-       
-
-def gen_multifeed1(camera):
-    while True:
-        frame = camera.get_frame()
-        # yield (b'--frame\r\n'
-        #         b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-
-
-@app.route('/video_feed_multifeed1')
-def video_feed_multifeed1():
-    selectValue = request.form.get('model_name')
-    print(selectValue)
-    url = request.args.get('url')
-    
-    return Response(gen_multifeed1(multifeed1(url)), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-###############################################################################################################
-class multifeed2():
-    def __init__(self, url):
-        # self.video = cv2.VideoCapture('rtmp://media1.ambicam.com:1938/dvr7/fd9b67cc-6c2e-46c6-99c4-0e13ac403e32')
-        current_loggin_user=current_user.username
-        fetch_url =  User_camera_sources.query.filter_by(username=current_loggin_user).first()
-        print(fetch_url.link1)
-        self.video = cv2.VideoCapture(fetch_url.link1)
-        frame_width = int(self.video.get(3))
-        frame_height = int(self.video.get(4))
-        rtmp_url = "rtmp://media5.ambicam.com:1938/live/feed111111"
-        ffmpeg = "ffmpeg -f rawvideo -pix_fmt bgr24 -s {}x{} -r 15 -i - -pix_fmt yuv420p -vcodec libx264 -preset ultrafast -tune zerolatency -http_persistent 0 -ar 8K -f flv {}".format(
-            frame_width, frame_height, rtmp_url)
-        self.url = url
-        self.error_count = 0
-        self.process = sp.Popen(ffmpeg.split(), stdin=sp.PIPE)
-        self.model = torch.hub.load('yolov5', 'custom', path='yolov5s.pt', source='local',_verbose=False, force_reload=True)
-
-       
-
-    def __del__(self):
-        self.video.release()
-    
-    def get_frame(self):
-       
-
-        
-        # Set Model Settings Dynamic
-        self.model.eval()
-        self.model.conf = 0.6  # confidence threshold (0-1)
-        self.model.iou = 0.45  # NMS IoU threshold (0-1) 
-      
-        success, frame = self.video.read()
-        if success == True:
-            new_img = fct.draw_anchor_box(
-                frame, fct.detection(frame, self.model))
-
-            # ret,buffer=cv2.imencode('.jpg',frame)
-            # frame=buffer.tobytes()
-            
-            # #print(type(frame))
-
-            # img = Image.open(io.BytesIO(frame))
-            # results = self.model(img, size=640)
-        
-            # results.print()  # print results to screen
-            
-            
-            # #convert remove single-dimensional entries from the shape of an array
-            # img = np.squeeze(results.render()) #RGB
-            # # read image as BGR
-            # img_BGR = cv2.cvtColor(img, cv2.COLOR_RGB2BGR) #BGR
-            # frame = cv2.imencode('.jpg', img_BGR)[1].tobytes()
-            self.process.stdin.write(frame.tobytes())
-            return frame
-       
-
-def gen_multifeed2(camera):
-    while True:
-        frame = camera.get_frame()
-        # yield (b'--frame\r\n'
-        #         b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-
-
-@app.route('/video_feed_multifeed2')
-def video_feed_multifeed2():
-    url = request.args.get('url')
-    
-    return Response(gen_multifeed2(multifeed2(url)), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
 #####################################################################################################################################################
 ###############    Segementation anything   ################################################################
 import os
@@ -2691,17 +2526,9 @@ from driver_behaviour.net import MobileNet
 from driver_behaviour.facial_tracking.facialTracking import FacialTracker
 import driver_behaviour.facial_tracking.conf as conf
 import tensorflow as tf
-model = MobileNet()
-model.load_weights("driver_behaviour/models/model_split.h5")
 
-yolo_model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
-yolo_model.classes = [0]
-yolo_model.classes = [67]
-facial_tracker = FacialTracker()
-last_capture_time = None
-capture_cooldown = 10
 ACTIONS = {'Safe Driving': 0, 'Texting - Right': 1, 'Talking on the Phone - Right': 2}  # Assuming ACTIONS dict is defined somewhere
-def infer_one_frame(image, model, yolo_model, facial_tracker,current_loggin_user):
+def infer_one_frame(self,image, model, yolo_model, facial_tracker,current_loggin_user):
     global last_capture_time
     eyes_status = ''
     yawn_status = ''
@@ -2728,7 +2555,7 @@ def infer_one_frame(image, model, yolo_model, facial_tracker,current_loggin_user
 
     if yawn_status == 'yawning':
         current_time = datetime.datetime.now()
-        if last_capture_time is None or (current_time - last_capture_time).total_seconds() > capture_cooldown:
+        if last_capture_time is None or (current_time - last_capture_time).total_seconds() > self.capture_cooldown:
             action = 'Yawning Detected'
             capture_image = True  # Set the flag to capture the image
             last_capture_time = current_time  # Update the last capture time
@@ -2753,6 +2580,15 @@ def infer_one_frame(image, model, yolo_model, facial_tracker,current_loggin_user
     return image
 class DriverBehaviour():
     def __init__(self,url):
+        self.model = MobileNet()
+        self.model.load_weights("driver_behaviour/models/model_split.h5")
+
+        self.yolo_model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
+        self.yolo_model.classes = [0]
+        self.yolo_model.classes = [67]
+        self.facial_tracker = FacialTracker()
+        self.last_capture_time = None
+        self.capture_cooldown = 10
         self.url=url
         self.video_name = self.url
         self.people_count_history = []
@@ -2770,7 +2606,7 @@ class DriverBehaviour():
         if not ret:
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             _, frame = self.cap.read()
-        frame = infer_one_frame(frame, model, yolo_model, facial_tracker,self.current_loggin_user)
+        frame = infer_one_frame(frame, self.model, self.yolo_model, self.facial_tracker,self.current_loggin_user)
 
         ret, buffer = cv2.imencode('.jpg', frame)
         return buffer.tobytes()
@@ -2831,6 +2667,6 @@ def show_images(folder):
 ####################################################################################################
 if __name__ == "__main__":
    
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", port=9000)
     
     

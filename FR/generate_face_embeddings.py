@@ -63,4 +63,3 @@ class GenerateFaceEmbedding:
         f = open(self.embedding_model_path, "wb")
         f.write(pickle.dumps(data))
         f.close()
-print("done embedding")

@@ -21,7 +21,7 @@ from FR import face_preprocess
 sys.path.append(os.path.join(os.path.dirname(__file__), 'FR'))
 # import face_image
 # import face_preprocess
-print("hello u r in face model file")
+
 
 def do_flip(data):
     for idx in range(data.shape[0]):
