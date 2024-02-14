@@ -2297,7 +2297,7 @@ def get_data():
 
 
 #################################### People counting booth demo ####################################################################
-
+video_detector_instance = None
 class VideoPeopleDetection1():
     time_reference = datetime.datetime.now()
     counter_frame = 0
@@ -2306,7 +2306,7 @@ class VideoPeopleDetection1():
     def __init__(self,url):
         # Load YOLOv5 model
         #self.model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
-        self.modelName = loadModel+"/prebuilt_model/crowdhuman_yolov5m.pt"
+        self.modelName = loadModel+"/prebuilt_model/crowd.pt"
         self.model = self.load_model(self.modelName)
         self.classes = self.model.names
         self.url=url
@@ -2322,10 +2322,19 @@ class VideoPeopleDetection1():
 
         # Read the video file
         self.cap = cv2.VideoCapture(self.video_name)
+         # Initialize ROI coordinates with None or default values
+        self.roi_x = None
+        self.roi_y = None
+        self.roi_width = None
+        self.roi_height = None
 
     def __del__(self):
         self.cap.release()
-
+    def update_roi(self, x, y, w, h):
+        self.roi_x = x
+        self.roi_y = y
+        self.roi_width = w
+        self.roi_height = h
     def load_model(self, model_name):
         if model_name:
             self.model = torch.hub.load('yolov5', 'custom', path=self.modelName, source='local',_verbose=False, force_reload=True)
@@ -2368,15 +2377,27 @@ class VideoPeopleDetection1():
         if not ret:
             self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
             _, frame = self.cap.read()
+       
+        # # Modify to check if ROI coordinates are set
+        roi_x = 0
+        roi_y = 0
+        roi_width = frame.shape[1]  # Width of the frame
+        roi_height = frame.shape[0]  # Height of the frame
 
-        # Generate ROI rectangle zone based on chair coordinates
-        roi_x = 238
-        roi_y = 148
-        roi_width = 235
-        roi_height = 159
+        # Flag to check if the ROI is set by the user
+        user_defined_roi = True if None not in (self.roi_x, self.roi_y, self.roi_width, self.roi_height) else False
 
+        # Update ROI variables if user-defined coordinates are available
+        if user_defined_roi:
+            roi_x = self.roi_x
+            roi_y = self.roi_y
+            roi_width = self.roi_width
+            roi_height = self.roi_height
 
-        num_people, alert_message = self.count_people_in_roi(frame, roi_x, roi_y, roi_width, roi_height)
+        num_people, alert_message = self.count_people_in_roi(frame, roi_x, roi_y, roi_width, roi_height, user_defined_roi)
+
+       
+
 
         # Draw the ROI rectangle
         cv2.rectangle(frame, (roi_x, roi_y), (roi_x + roi_width, roi_y + roi_height), (0, 255, 0), 2)
@@ -2424,7 +2445,7 @@ class VideoPeopleDetection1():
 
         ret, jpeg = cv2.imencode(".jpg", frame)
         return jpeg.tobytes()
-    def count_people_in_roi(self, frame, roi_x, roi_y, roi_width, roi_height):
+    def count_people_in_roi(self, frame, roi_x, roi_y, roi_width, roi_height, user_defined_roi):
         # Crop the frame to the ROI
         roi_frame = frame[roi_y:roi_y + roi_height, roi_x:roi_x + roi_width]
 
@@ -2447,10 +2468,12 @@ class VideoPeopleDetection1():
                 cv2.rectangle(frame, (roi_x + xmin, roi_y + ymin), (roi_x + xmax, roi_y + ymax), (0, 0, 255), 2)
                 cv2.putText(frame, f"Person", (roi_x + xmin, roi_y + ymin), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
 
-        # Check if the number of people exceeds the limit
-        if num_people > 1:  # Adjust the limit as per your requirement
+        # Customize alert message based on whether the ROI is user-defined
+        if num_people > 1 and user_defined_roi:
             alert_message = "Alert: Exceeded maximum limit of people!"
-
+        elif num_people > 1 and not user_defined_roi:
+            # Optionally, handle the case differently when the entire frame is used
+            alert_message = ""
         # Return the number of people and the alert message
         return num_people, alert_message
 
@@ -2464,11 +2487,12 @@ def gen_crowd_counting1(camera):
 
 @app.route("/video_feed_for_crowd_counting1")
 def video_feed_for_crowd_counting1():
+    global video_detector_instance
     url = request.args.get('url')
-    video_detector = VideoPeopleDetection1(url)
+    video_detector_instance = VideoPeopleDetection1(url)
 
    
-    return Response(gen_crowd_counting1(video_detector),
+    return Response(gen_crowd_counting1(video_detector_instance),
                     mimetype="multipart/x-mixed-replace; boundary=frame")
 
 @app.route('/crowd_counting1.html' ,methods=["POST","GET"])
@@ -2518,7 +2542,20 @@ def get_data1():
 
     # Return the data as a JSON response with the cache-control headers
     return Response(json_data, headers=headers)
+##########################################################
+@app.route('/custom/roi', methods=['POST'])
+def custom_roi():
+    global video_detector_instance
+    if video_detector_instance is None:
+        return jsonify({"error": "Video detector instance not initialized"}), 400
 
+    x = request.form.get('x', type=int)
+    y = request.form.get('y', type=int)
+    w = request.form.get('w', type=int)
+    h = request.form.get('h', type=int)
+    print(x ,y ,w ,h)
+    video_detector_instance.update_roi(x, y, w, h)
+    return jsonify({"success": True})
 ####################################################################################################################################
 ######################################### Driver detection test ##########################################################
 from driver_behaviour.dms_utils.dms_utils import load_and_preprocess_image, ACTIONS

@@ -187,9 +187,20 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="static/assets/js/annotation/less.js"></script>
+
+		<script src="static/assets/js/annotation/jquery-3.5.1.min.js"></script>
+
+		<script src="static/assets/js/annotation/less.js"></script>
+
+		<script src="static/assets/js/annotation/jquery-3.5.1.min.js"></script>
+
+
 <title>Person Counter</title>
 
 
@@ -236,9 +247,12 @@
                                 <!-- <h5>Video Streaming </h5> -->
                             </div>
                             <div class="demo-container" style="width:100%">
-                                <img id='videoImage' src="" style="display:visible;" />
+                                <img id='videoImage' src="" style="display:none;" />
                             </div>
-                           
+                            <div>
+                                <canvas id="drawCanvas" style="cursor: crosshair;"></canvas>
+                                
+                            </div>
                         </div>
                     </div>
                     
@@ -259,7 +273,47 @@
         
         <script>
             
-   
+            var gDrawing = false;
+			var x, y, w, h, canvas;
+			var gDrawRect = false;
+			function initCanvas() {
+				canvas = document.getElementById('drawCanvas');
+
+				canvas.addEventListener("mousedown", function (e) {
+					gDrawRect = true;
+					x = e.clientX - canvas.offsetLeft;
+					y = e.clientY - canvas.offsetTop;
+					gDrawRect = true;
+				}, false);
+				canvas.addEventListener("mouseup", function (e) {
+					var xx = e.clientX - canvas.offsetLeft;
+					var yy = e.clientY - canvas.offsetTop;
+					w = xx - x;
+					h = yy - y;
+					gDrawRect = false;
+					$.ajax({
+						url: '/custom/roi',
+						data: { 'x': x, 'y': y, 'w': w, 'h': h },
+						type: 'POST',
+						error: function (result) {
+							alert("API has Problem, Try Again!");
+						},
+						success: function (result) {
+
+						}
+					});
+				}, false);
+			}
+			function drawImge() {
+				var video = document.querySelector("#videoImage");
+				canvas = document.querySelector("#drawCanvas");
+				var ctx = canvas.getContext('2d');
+
+				canvas.width = video.width;
+				canvas.height = video.height;
+				ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+				if (gDrawing) setTimeout(drawImge, 100);
+			}
 
     $("#btnPlay").on("click", function (event) {
         event.preventDefault();
@@ -284,13 +338,16 @@
                     // play in image
                     $("#videoImage").attr("src", "/video_feed_for_crowd_counting1?url=" + text);
                 }
-        initCanvas();
+                gDrawing = true;
+				setTimeout(drawImge, 300);
+				initCanvas();
     }).done((response) => { $("#btnPlay").text("DONE").attr('disabled', true); })
     $("#btnStop").on("click", function (event) {
         event.preventDefault();
         console.log("Stop Stream ...");
+        
         $("#videoImage").attr("src", "/");
-
+        gDrawing = false;
     });
     
 
